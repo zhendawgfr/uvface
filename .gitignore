@@ -1,0 +1,15 @@
+# Connect IQ build outputs
+bin/
+gen/
+mir/
+internal-mir/
+*.prg
+*.debug.xml
+
+# Developer key & secrets
+developer_key
+*.der
+*.pem
+
+# OS files
+.DS_Store
