@@ -2,11 +2,18 @@
 
 A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin Venu 4** and **Venu 4S** that displays the current UV index for your location.
 
-![Launcher Icon](resources/drawables/launcher_icon.png)
+![Banner](resources/store_banner_1440x720.png)
+
+## Screenshots
+
+| Real Device |
+| :---: |
+| ![Real Device Screenshot](resources/screenshot3.png) |
 
 ## Features
 
 - **Zero-Configuration Weather Data**: Automatically retrieves local UV index values via Garmin's built-in `Toybox.Weather` API fed from your paired smartphone. No API keys or extra companion apps required.
+- **Data Staleness Indicator**: Displays `"updated N min ago"` based on `observationTime` so you know exactly how recently weather data was synced from your phone.
 - **WHO UV Scale Color Coding**: Color-coded numbers based on official World Health Organization standards:
   - 🟢 **0 – 2 (Low)**: Green
   - 🟡 **3 – 5 (Moderate)**: Yellow
@@ -29,7 +36,9 @@ A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin 
 │   └── UvFaceView.mc                     # Watch face view and rendering logic
 └── resources/
     ├── strings/strings.xml               # String resources
-    └── drawables/                        # App icons and graphics
+    ├── drawables/                        # App icons and graphics
+    ├── store_banner_1440x720.png         # Connect IQ Store promo banner (1440x720)
+    └── screenshot3.png                   # Real device screenshot (<150KB)
 ```
 
 ## Requirements & Building
@@ -62,7 +71,8 @@ Press `F5` in VS Code to launch the Connect IQ Simulator. You can simulate diffe
 ### Option A: Connect IQ Store (Wireless)
 1. In VS Code, open the Command Palette and run **Monkey C: Export Project**.
 2. Upload the exported `.iq` file to your developer account on the [Garmin Connect IQ Store](https://apps.garmin.com).
-3. Once approved, download and install directly to your watch via the Garmin Connect phone app.
+3. Upload the prepared store assets from `resources/` (`store_banner_1440x720.png` & `screenshot3.png`).
+4. Once approved (~24-48 hrs), download and install directly to your watch via the Garmin Connect phone app.
 
 ### Option B: USB Side-Loading
 1. Build the `.prg` file using **Monkey C: Build for Device**.
