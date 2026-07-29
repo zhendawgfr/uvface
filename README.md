@@ -1,24 +1,35 @@
 # UV Index Watch Face
 
-A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin Venu 4** and **Venu 4S** that displays the current UV index for your location.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.2.0-blue.svg)](https://developer.garmin.com/connect-iq/)
+
+A minimal, battery-efficient Garmin Connect IQ watch face for the **Garmin Venu 4** (45 mm & 41 mm) that displays the current UV index for your location — nothing else.
 
 ![Real Device Screenshot](resources/screenshot3.png)
 
 ## Installation
 
-### From the Garmin Connect IQ Store (Recommended)
+### Garmin Connect IQ Store — coming soon
+
+The watch face is currently in **beta review** on the Connect IQ Store. Once published, you will be able to install it wirelessly:
 
 1. Open the **Garmin Connect IQ** app on your iOS or Android device.
-2. Search for **"UV Index Watch Face"** (or visit the store page directly).
-3. Tap **Install** to sync the watch face to your device wirelessly over Bluetooth.
+2. Search for **"UV Index Watch Face"**.
+3. Tap **Install** to sync it to your watch over Bluetooth.
+
+*This section will be updated with a direct store link once the listing is public.*
+
+### Sideloading (available now)
+
+If you have a USB cable and the Connect IQ SDK, you can build and install it yourself today — see [Development & Building from Source](#development--building-from-source) below.
 
 ---
 
 ## Features
 
-- **Zero-Configuration Weather Data**: Automatically retrieves local UV index values via Garmin's built-in `Toybox.Weather` API fed from your paired smartphone. No API keys or extra companion apps required.
-- **Data Staleness Indicator**: Displays `"updated N min ago"` based on `observationTime` so you know exactly how recently weather data was synced from your phone.
-- **WHO UV Scale Color Coding**: Color-coded numbers based on official World Health Organization standards:
+- **Zero-Configuration Weather Data**: Automatically retrieves local UV index values via Garmin's built-in `Toybox.Weather` API fed from your paired smartphone. No API keys, no companion app, no network code.
+- **Data Staleness Indicator**: Shows `"updated N min ago"` (rolling over to hours/days when data is old) so you know exactly how fresh the reading is.
+- **WHO UV Scale Color Coding**: The displayed number is rounded first and then classified, so the digit on screen always matches its color and label:
   - 🟢 **0 – 2 (Low)**: Green
   - 🟡 **3 – 5 (Moderate)**: Yellow
   - 🟠 **6 – 7 (High)**: Orange
@@ -30,6 +41,24 @@ A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin 
   - Reduced brightness and minimal elements during sleep state to preserve screen life and battery.
 - **Offline / Sync Indicator**: Displays `--` when weather data has not yet synced from the phone or is unavailable.
 
+## Supported Devices
+
+| Device | SDK ID | Resolution |
+| :--- | :--- | :--- |
+| Garmin Venu 4 (45 mm) | `venu445mm` | 454 × 454 |
+| Garmin Venu 4 (41 mm) | `venu441mm` | 390 × 390 |
+
+The layout is tuned on the 45 mm screen and scaled proportionally on the 41 mm.
+
+## Roadmap
+
+- [ ] Public Connect IQ Store listing (currently in beta review)
+- [ ] Additional languages (currently English only)
+- [ ] Broader device support beyond the Venu 4 family
+- [ ] Optional colored arc gauge around the UV number
+
+Suggestions and contributions welcome — open an issue or PR.
+
 ---
 
 ## Development & Building from Source
@@ -40,7 +69,7 @@ If you want to modify or contribute to this watch face, you can build and run it
 
 - [Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) (v3.2.0 or higher)
 - Visual Studio Code with the **Monkey C** extension installed
-- A valid Garmin Developer Key (`developer_key`) for compilation and signing
+- A Garmin Developer Key for compilation and signing (the extension can generate one; it is **not** included in this repository)
 
 ### Building & Running in Simulator
 
@@ -51,7 +80,7 @@ If you want to modify or contribute to this watch face, you can build and run it
    ```
 2. Open the project folder in VS Code.
 3. Press `F5` to launch the Connect IQ Simulator.
-   - Test weather states via **Simulation → Weather**.
+   - Test weather states via **Simulation → Weather** (including the no-data `null` case).
    - Test AMOLED burn-in protection shift & dimming via **Simulation → Toggle Low Power Mode**.
 4. To build for a physical device:
    - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → Select `venu445mm` (Venu 4 45mm) or `venu441mm` (Venu 4 41mm).
@@ -71,11 +100,16 @@ If you want to modify or contribute to this watch face, you can build and run it
 ├── source/
 │   ├── UvFaceApp.mc                      # Application entry point
 │   └── UvFaceView.mc                     # Watch face view and rendering logic
-└── resources/
-    ├── strings/strings.xml               # String resources
-    ├── drawables/                        # App icons and graphics
-    └── screenshot3.png                   # Real device screenshot
+├── resources/
+│   ├── strings/strings.xml               # String resources
+│   ├── drawables/                        # App icons and graphics
+│   └── screenshot3.png                   # Real device screenshot
+└── LICENSE                               # MIT
 ```
+
+## Contributing
+
+Issues and pull requests are welcome. Keep in mind the design philosophy: **UV index only**, black background, no network code, no configuration screens. Feature ideas that fit that scope (see the roadmap) are the most likely to be merged.
 
 ## License
 

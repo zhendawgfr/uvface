@@ -2,7 +2,7 @@
 
 ## What this project is
 
-A minimal Garmin Connect IQ **watch face** for the **Venu 4 / Venu 4S** that displays
+A minimal Garmin Connect IQ **watch face** for the **Venu 4 (45mm / 41mm)** that displays
 only the current UV index for the user's current location. Written in **Monkey C**.
 No network code, no API keys: it reads `Toybox.Weather.getCurrentConditions().uvIndex`,
 which Garmin Connect feeds to the watch via the paired phone.
@@ -74,4 +74,7 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 - Keep everything in `UvFaceView.mc` unless it grows past ~200 lines.
 - No background services, no `Communications` — stay on `Toybox.Weather` only.
 - Black background always (AMOLED battery + burn-in).
-- Target devices stay venu4 + venu4s only unless the owner asks to broaden.
+- Target devices stay venu445mm + venu441mm for now. Owner plans to broaden
+  device support and add more languages after the store listing goes public
+  (currently in beta review as of 2026-07). There is no "Venu 4S" — Garmin's
+  official names for this generation are Venu 4 45mm and Venu 4 41mm.
