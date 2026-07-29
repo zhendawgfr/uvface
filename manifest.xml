@@ -7,11 +7,10 @@
     <iq:application id="c2ada1e1b74f4f60a16b2463e0ea0784" type="watchface" name="@Strings.AppName" entry="UvFaceApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.2.0">
         <iq:products>
             <iq:product id="venu445mm"/>
+            <iq:product id="venu441mm"/>
         </iq:products>
         <!-- Toybox.Weather needs no special permission -->
-        <iq:permissions>
-            <iq:uses-permission id="Positioning"/>
-        </iq:permissions>
+        <iq:permissions/>
         <iq:languages>
             <iq:language>eng</iq:language>
         </iq:languages>

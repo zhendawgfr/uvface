@@ -1,5 +1,6 @@
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.Math;
 import Toybox.System;
 import Toybox.Time;
 import Toybox.WatchUi;
@@ -31,12 +32,17 @@ class UvFaceView extends WatchUi.WatchFace {
 
         var cx = dc.getWidth() / 2;
         var cy = dc.getHeight() / 2;
-        var text = (uv == null) ? "--" : uv.format("%.0f");
+
+        // Round once, then classify on the rounded value, so the number on
+        // screen always matches its color and label (2.7 shows as 3, and 3 is
+        // "moderate" on the WHO scale, not "low").
+        var uvShown = (uv == null) ? null : Math.round(uv);
+        var text = (uvShown == null) ? "--" : uvShown.format("%.0f");
 
         if (_lowPower) {
             // Always-on display: keep it dim and small, and nudge the
             // position every minute to satisfy AMOLED burn-in protection.
-            var shift = ((System.getClockTime().min % 3) - 1) * 12;
+            var shift = ((System.getClockTime().min % 3) - 1) * scaled(dc, 12);
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, cy + shift, Graphics.FONT_NUMBER_MILD, text,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
@@ -44,27 +50,35 @@ class UvFaceView extends WatchUi.WatchFace {
         }
 
         // --- Active mode: big number, colored by WHO UV scale ---
-        dc.setColor(uvColor(uv), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - 30, Graphics.FONT_NUMBER_THAI_HOT, text,
+        dc.setColor(uvColor(uvShown), Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - scaled(dc, 30), Graphics.FONT_NUMBER_THAI_HOT, text,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 50, Graphics.FONT_SMALL, "UV INDEX",
+        dc.drawText(cx, cy + scaled(dc, 50), Graphics.FONT_SMALL, "UV INDEX",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 80, Graphics.FONT_XTINY, uvLabel(uv),
+        dc.drawText(cx, cy + scaled(dc, 80), Graphics.FONT_XTINY, uvLabel(uvShown),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         var updatedStr = stalenessLabel(obsTime);
         if (updatedStr != null) {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + 108, Graphics.FONT_XTINY, updatedStr,
+            dc.drawText(cx, cy + scaled(dc, 108), Graphics.FONT_XTINY, updatedStr,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
     }
 
-    // Returns "updated N min ago" string or null if observationTime is unavailable.
+    // Vertical offsets were tuned on the 454px Venu 4 45mm screen; scale them
+    // so the 390px 41mm screen keeps the same proportions.
+    private function scaled(dc as Dc, px as Number) as Number {
+        return Math.round(px * dc.getHeight() / 454.0).toNumber();
+    }
+
+    // Returns an "updated ..." string, or null if observationTime is unavailable.
+    // Rolls over to hours/days so a long phone disconnect does not print
+    // something like "updated 632 min ago".
     private function stalenessLabel(obsTime as Time.Moment?) as String? {
         if (obsTime == null) {
             return null;
@@ -74,11 +88,19 @@ class UvFaceView extends WatchUi.WatchFace {
             diffSec = 0;
         }
         var minAgo = (diffSec / 60).toNumber();
-        return "updated " + minAgo + " min ago";
+        if (minAgo < 90) {
+            return "updated " + minAgo + " min ago";
+        }
+        var hoursAgo = minAgo / 60;
+        if (hoursAgo < 24) {
+            return "updated " + hoursAgo + "h ago";
+        }
+        return "updated 1d+ ago";
     }
 
     // Standard WHO color scale.
-    private function uvColor(uv as Float?) as Number {
+    // Takes the rounded UV value, so `Numeric` rather than the raw `Float`.
+    private function uvColor(uv as Numeric?) as Number {
         if (uv == null)  { return Graphics.COLOR_LT_GRAY; }
         if (uv < 3)      { return Graphics.COLOR_GREEN;   }  // Low
         if (uv < 6)      { return Graphics.COLOR_YELLOW;  }  // Moderate
@@ -87,7 +109,7 @@ class UvFaceView extends WatchUi.WatchFace {
         return 0xAA55FF;                                     // Extreme (violet)
     }
 
-    private function uvLabel(uv as Float?) as String {
+    private function uvLabel(uv as Numeric?) as String {
         if (uv == null)  { return "no data";   }
         if (uv < 3)      { return "low";       }
         if (uv < 6)      { return "moderate";  }

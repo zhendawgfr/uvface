@@ -15,7 +15,7 @@ Expect possible minor compile fixes depending on installed SDK version.
 ## Project structure
 
 ```
-manifest.xml                          # app id, type=watchface, products: venu4, venu4s, minApiLevel 3.2.0
+manifest.xml                          # app id, type=watchface, products: venu445mm + venu441mm, minApiLevel 3.2.0
 monkey.jungle                         # standard jungle file, nothing custom
 source/UvFaceApp.mc                   # Application.AppBase entry, returns UvFaceView
 source/UvFaceView.mc                  # ALL logic lives here
@@ -37,8 +37,13 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
   Current implementation: dim gray `FONT_NUMBER_MILD` number, vertical offset
   cycling ±12px based on `System.getClockTime().min % 3`. Keep this behavior
   in any redesign.
+- Vertical offsets were tuned on the 454px `venu445mm` screen and go through
+  `scaled(dc, px)`, which multiplies by `dc.getHeight() / 454.0` so the 390px
+  `venu441mm` keeps the same proportions. Use it for any new offset.
 - Colors follow the WHO UV scale: <3 green, <6 yellow, <8 orange, <11 red,
   ≥11 violet (0xAA55FF). Labels: low / moderate / high / very high / extreme.
+  Classification runs on `Math.round(uv)`, not the raw float, so the digit on
+  screen always matches its color and label (2.7 → shows 3 → "moderate").
 - `getInitialView()` uses the modern SDK 7+ return type
   `[Views] or [Views, InputDelegates]`. If compiling against an older SDK
   fails here, switch to the legacy `Array<Views or InputDelegates>` signature.
@@ -47,7 +52,8 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 ## Build / test / deploy
 
 - Toolchain: VS Code + Monkey C extension + Connect IQ SDK + developer key.
-- Build: command palette → "Monkey C: Build for Device" → `venu4`.
+- Build: command palette → "Monkey C: Build for Device" → `venu445mm` (45mm)
+  or `venu441mm` (41mm). There is no `venu4`/`venu4s` device id.
 - Simulator: F5; set fake UV via Simulation → Weather. Test both power modes
   (simulator has a low-power toggle) and the null-UV case.
 - Deploy options:

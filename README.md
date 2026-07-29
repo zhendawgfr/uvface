@@ -54,7 +54,7 @@ If you want to modify or contribute to this watch face, you can build and run it
    - Test weather states via **Simulation → Weather**.
    - Test AMOLED burn-in protection shift & dimming via **Simulation → Toggle Low Power Mode**.
 4. To build for a physical device:
-   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → Select `venu4` or `venu4s`.
+   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → Select `venu445mm` (Venu 4 45mm) or `venu441mm` (Venu 4 41mm).
 
 ### Manual Sideloading (USB)
 
@@ -66,7 +66,7 @@ If you want to modify or contribute to this watch face, you can build and run it
 ## Project Structure
 
 ```
-├── manifest.xml                          # Connect IQ manifest (Target: Venu 4, Venu 4S, Min API 3.2.0)
+├── manifest.xml                          # Connect IQ manifest (Target: venu445mm + venu441mm, Min API 3.2.0)
 ├── monkey.jungle                         # Project jungle configuration
 ├── source/
 │   ├── UvFaceApp.mc                      # Application entry point
