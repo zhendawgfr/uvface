@@ -1,6 +1,7 @@
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
+import Toybox.Time;
 import Toybox.WatchUi;
 import Toybox.Weather;
 
@@ -21,9 +22,11 @@ class UvFaceView extends WatchUi.WatchFace {
 
         // --- Get the UV index for the current location ---
         var uv = null;
+        var obsTime = null;
         var conditions = Weather.getCurrentConditions();
         if (conditions != null) {
-            uv = conditions.uvIndex;   // Float or null
+            uv = conditions.uvIndex;                 // Float or null
+            obsTime = conditions.observationTime;    // Moment or null
         }
 
         var cx = dc.getWidth() / 2;
@@ -42,16 +45,36 @@ class UvFaceView extends WatchUi.WatchFace {
 
         // --- Active mode: big number, colored by WHO UV scale ---
         dc.setColor(uvColor(uv), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - 18, Graphics.FONT_NUMBER_THAI_HOT, text,
+        dc.drawText(cx, cy - 30, Graphics.FONT_NUMBER_THAI_HOT, text,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 70, Graphics.FONT_SMALL, "UV INDEX",
+        dc.drawText(cx, cy + 50, Graphics.FONT_SMALL, "UV INDEX",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 100, Graphics.FONT_XTINY, uvLabel(uv),
+        dc.drawText(cx, cy + 80, Graphics.FONT_XTINY, uvLabel(uv),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+        var updatedStr = stalenessLabel(obsTime);
+        if (updatedStr != null) {
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, cy + 108, Graphics.FONT_XTINY, updatedStr,
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
+    }
+
+    // Returns "updated N min ago" string or null if observationTime is unavailable.
+    private function stalenessLabel(obsTime as Time.Moment?) as String? {
+        if (obsTime == null) {
+            return null;
+        }
+        var diffSec = Time.now().value() - obsTime.value();
+        if (diffSec < 0) {
+            diffSec = 0;
+        }
+        var minAgo = (diffSec / 60).toNumber();
+        return "updated " + minAgo + " min ago";
     }
 
     // Standard WHO color scale.
