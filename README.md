@@ -2,11 +2,17 @@
 
 A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin Venu 4** and **Venu 4S** that displays the current UV index for your location.
 
-## Screenshots
+![Real Device Screenshot](resources/screenshot3.png)
 
-| Real Device |
-| :---: |
-| ![Real Device Screenshot](resources/screenshot3.png) |
+## Installation
+
+### From the Garmin Connect IQ Store (Recommended)
+
+1. Open the **Garmin Connect IQ** app on your iOS or Android device.
+2. Search for **"UV Index Watch Face"** (or visit the store page directly).
+3. Tap **Install** to sync the watch face to your device wirelessly over Bluetooth.
+
+---
 
 ## Features
 
@@ -24,6 +30,39 @@ A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin 
   - Reduced brightness and minimal elements during sleep state to preserve screen life and battery.
 - **Offline / Sync Indicator**: Displays `--` when weather data has not yet synced from the phone or is unavailable.
 
+---
+
+## Development & Building from Source
+
+If you want to modify or contribute to this watch face, you can build and run it locally using the Connect IQ SDK.
+
+### Prerequisites
+
+- [Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) (v3.2.0 or higher)
+- Visual Studio Code with the **Monkey C** extension installed
+- A valid Garmin Developer Key (`developer_key`) for compilation and signing
+
+### Building & Running in Simulator
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/zhendawgfr/uvface.git
+   cd uvface
+   ```
+2. Open the project folder in VS Code.
+3. Press `F5` to launch the Connect IQ Simulator.
+   - Test weather states via **Simulation → Weather**.
+   - Test AMOLED burn-in protection shift & dimming via **Simulation → Toggle Low Power Mode**.
+4. To build for a physical device:
+   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → Select `venu4` or `venu4s`.
+
+### Manual Sideloading (USB)
+
+1. Build the `.prg` file using **Monkey C: Build for Device**.
+2. Connect your watch via USB and copy the output `.prg` file into the `/GARMIN/Apps/` folder on your watch storage.
+
+---
+
 ## Project Structure
 
 ```
@@ -35,46 +74,9 @@ A minimal, battery-efficient Garmin Connect IQ watch face designed for **Garmin 
 └── resources/
     ├── strings/strings.xml               # String resources
     ├── drawables/                        # App icons and graphics
-    └── screenshot3.png                   # Real device screenshot (<150KB)
+    └── screenshot3.png                   # Real device screenshot
 ```
-
-## Requirements & Building
-
-### Prerequisites
-
-- [Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) (v3.2.0 or higher)
-- Visual Studio Code with the **Monkey C** extension installed
-- A valid Garmin Developer Key (`developer_key`) for compilation and signing
-
-### How to Build
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/zhendawgfr/uvface.git
-   cd uvface
-   ```
-2. Open the project folder in VS Code.
-3. Open the Command Palette (`Cmd+Shift+P` on macOS / `Ctrl+Shift+P` on Windows/Linux) and select:
-   - **Monkey C: Build for Device** → Select `venu4` or `venu4s`.
-
-### Running in Simulator
-
-Press `F5` in VS Code to launch the Connect IQ Simulator. You can simulate different UV conditions and test power modes via:
-- **Simulation → Weather** (set custom UV index values or test `null` states).
-- **Simulation → Toggle Low Power Mode** (test AMOLED burn-in protection shift and dimming).
-
-## Deployment
-
-### Option A: Connect IQ Store (Wireless)
-1. In VS Code, open the Command Palette and run **Monkey C: Export Project**.
-2. Upload the exported `.iq` file to your developer account on the [Garmin Connect IQ Store](https://apps.garmin.com).
-3. Upload the screen image from `resources/` (`screenshot3.png`).
-4. Once approved (~24-48 hrs), download and install directly to your watch via the Garmin Connect phone app.
-
-### Option B: USB Side-Loading
-1. Build the `.prg` file using **Monkey C: Build for Device**.
-2. Connect your watch via USB and copy the output `.prg` file to `/GARMIN/Apps/` on the watch storage.
 
 ## License
 
-Personal project / Open Source.
+This project is open source and available under the [MIT License](LICENSE).
