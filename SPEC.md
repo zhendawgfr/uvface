@@ -35,7 +35,7 @@ manifest: unchanged
 
 id|status|task|cites
 T1|x|helper: `nightInfo(uvShown, hourly)` → null (day) | {firstUvMoment: Moment?} (night); single pass over ≤6 future entries|V1,V2,V3
-T2|.|night hero: crescent (2× fillCircle) + "night" label, skip UV number|V4,V9
+T2|x|night hero: crescent (2× fillCircle) + "night" label, skip UV number|V4,V9
 T3|.|"UV from ~HH:MM" line in provenance slot|V5
 T4|.|bars: night → start at first nonzero-UV entry, skip leading zeros; none → skip row|V6,V7
 T5|.|sim test: day, night, all-null forecast, current-UV-nonzero @ zero forecast, 12h clock, AOD both modes; build all 8 devices|V1,V3,V8,V9

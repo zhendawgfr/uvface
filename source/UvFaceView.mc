@@ -65,21 +65,31 @@ class UvFaceView extends WatchUi.WatchFace {
             return;
         }
 
-        // --- Active mode: clock on top, big number colored by WHO UV scale ---
+        // --- Active mode: clock on top, big number colored by WHO UV scale.
+        // At night (no meaningful UV now or in the coming hours) the number
+        // gives way to a moon — see nightInfo() for the exact rule. ---
+        var hourly = Weather.getHourlyForecast();
+        var night = nightInfo(uvShown, hourly);
+
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy - scaled(dc, 150), Graphics.FONT_MEDIUM, clockString(),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-        dc.setColor(uvColor(uvShown), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scaled(dc, 30), Graphics.FONT_NUMBER_THAI_HOT, text,
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        if (night != null) {
+            drawCrescent(dc, cx, cy - scaled(dc, 30));
+        } else {
+            dc.setColor(uvColor(uvShown), Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, cy - scaled(dc, 30), Graphics.FONT_NUMBER_THAI_HOT, text,
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy + scaled(dc, 45), Graphics.FONT_XTINY, "UV INDEX",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scaled(dc, 70), Graphics.FONT_XTINY, uvLabel(uvShown),
+        dc.drawText(cx, cy + scaled(dc, 70), Graphics.FONT_XTINY,
+            (night != null) ? "night" : uvLabel(uvShown),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         var updatedStr = provenanceLabel(obsTime, obsName);
@@ -160,6 +170,19 @@ class UvFaceView extends WatchUi.WatchFace {
 
             x += barW + gap;
         }
+    }
+
+    // Night-mode hero: a crescent moon where the big UV number normally sits.
+    // No Garmin font has a moon glyph and a bitmap would need per-resolution
+    // variants, so it is two filled circles: a light gray disc with a black
+    // disc punched out toward the upper right (background is always black,
+    // so the overlap simply disappears).
+    private function drawCrescent(dc as Dc, cx as Number, cy as Number) as Void {
+        var r = scaled(dc, 50);
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, r);
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx + scaled(dc, 22), cy - scaled(dc, 12), scaled(dc, 43));
     }
 
     // Decides whether the face is in "night mode": no meaningful UV now and
