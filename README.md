@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.2.0-blue.svg)](https://developer.garmin.com/connect-iq/)
+[![Connect IQ Store](https://img.shields.io/badge/Connect%20IQ%20Store-Install-brightgreen.svg)](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)
 
 A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmin watches (Venu 4, Vivoactive 5/6, Fenix 8 AMOLED, Fenix E) built around one number: the current UV index at your location — plus the time and a compact hourly UV forecast.
 
@@ -9,17 +10,14 @@ A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmi
 
 ## Installation
 
-### Garmin Connect IQ Store — coming soon
+### Garmin Connect IQ Store (recommended)
 
-The watch face is currently in **beta review** on the Connect IQ Store. Once published, you will be able to install it wirelessly:
+**[Install from the Connect IQ Store](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)**
 
-1. Open the **Garmin Connect IQ** app on your iOS or Android device.
-2. Search for **"UV Index Watch Face"**.
-3. Tap **Install** to sync it to your watch over Bluetooth.
+1. Open the store link above, or search for **"UV Index"** in the **Garmin Connect IQ** app on your iOS or Android device.
+2. Tap **Install** — the watch face syncs to your watch over Bluetooth.
 
-*This section will be updated with a direct store link once the listing is public.*
-
-### Sideloading (available now)
+### Sideloading
 
 If you have a USB cable and the Connect IQ SDK, you can build and install it yourself today — see [Development & Building from Source](#development--building-from-source) below.
 
@@ -60,7 +58,7 @@ The layout is tuned on the 454 px screen and scaled proportionally on smaller re
 
 ## Roadmap
 
-- [ ] Public Connect IQ Store listing (currently in beta review)
+- [x] Public Connect IQ Store listing — [live here](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)
 - [ ] Additional languages (currently English only)
 - [x] Broader device support beyond the Venu 4 family (round AMOLED devices; more planned, e.g. Venu 2/3, Epix 2, Forerunner 165/265/965)
 - [ ] Optional colored arc gauge around the UV number

@@ -101,5 +101,8 @@ mode only, not in AOD).
   Epix 2/Pro, FR165/265/965, MARQ Gen 2 are likely compatible too but their
   device definitions are not installed — download via SDK Manager before
   adding them to the manifest, or export fails. Owner plans more languages
-  after the store listing goes public. There is no "Venu 4S" — Garmin's
-  official names for this generation are Venu 4 45mm and Venu 4 41mm.
+  next. Store listing PUBLIC since 2026-07-30:
+  https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1
+  (public appID afa93e1472dd40ad9be3541373f93d1c; old beta appID retired).
+  There is no "Venu 4S" — Garmin's official names for this generation are
+  Venu 4 45mm and Venu 4 41mm.
