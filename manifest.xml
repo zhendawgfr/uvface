@@ -4,7 +4,7 @@
         Watch face: shows only the current UV index for the current location.
         Data source: Toybox.Weather (fed by Garmin Connect via your phone).
     -->
-    <iq:application id="afa93e1472dd40ad9be3541373f93d1c" type="watchface" name="@Strings.AppName" entry="UvFaceApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.2.0">
+    <iq:application id="afa93e1472dd40ad9be3541373f93d1c" type="watchface" name="@Strings.AppName" entry="UvFaceApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.3.0">
         <iq:products>
             <iq:product id="venu445mm"/>
             <iq:product id="venu441mm"/>

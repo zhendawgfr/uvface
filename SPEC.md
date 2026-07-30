@@ -45,7 +45,7 @@ T3|x|"UV from ~HH:MM" line in provenance slot|V5
 T4|x|bars: night → start at first nonzero-UV entry, skip leading zeros; none → skip row|V6,V7
 T5|x|sim test: day, night, all-null forecast, current-UV-nonzero @ zero forecast, 12h clock, AOD both modes; build all 8 devices|V8,V9
 T6|x|docs: CLAUDE.md night-mode facts, README features, store What's New|—
-T7|.|night trigger → sun-times: manifest 3.3.0, `nightInfo` gates on getSunrise/getSunset, forecast keeps line+bars roles; build all 8|V2,V10,V11
+T7|x|night trigger → sun-times: manifest 3.3.0, `nightInfo` gates on getSunrise/getSunset, forecast keeps line+bars roles; build all 8|V2,V10,V11
 T8|.|sim re-test: cloudy day (UV 0, sun up) → day; true night → moon; null position → day; docs sync|V2,V10
 
 ## §B bugs

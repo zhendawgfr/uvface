@@ -66,10 +66,10 @@ class UvFaceView extends WatchUi.WatchFace {
         }
 
         // --- Active mode: clock on top, big number colored by WHO UV scale.
-        // At night (no meaningful UV now or in the coming hours) the number
-        // gives way to a moon — see nightInfo() for the exact rule. ---
+        // At night (sun below the horizon) the number gives way to a moon —
+        // see nightInfo() for the exact rule. ---
         var hourly = Weather.getHourlyForecast();
-        var night = nightInfo(uvShown, hourly);
+        var night = nightInfo(conditions, hourly);
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy - scaled(dc, 150), Graphics.FONT_MEDIUM, clockString(),
@@ -201,47 +201,56 @@ class UvFaceView extends WatchUi.WatchFace {
         dc.fillCircle(cx + scaled(dc, 22), cy - scaled(dc, 12), scaled(dc, 43));
     }
 
-    // Decides whether the face is in "night mode": no meaningful UV now and
-    // none coming. Night is purely forecast-driven (no sunrise/sunset API, no
-    // position): the rounded current UV must be 0 and the next up-to-6
-    // forecast hours must all round to 0. Any missing data (null current UV,
-    // no forecast, a null entry among the checked hours) means "unknown", and
-    // unknown never triggers night — the day layout is the safe default.
-    // A rounded current UV > 0 always wins: a nonzero number on screen is
-    // never hidden, even if the coming hours are all zero (sunset hour).
+    // Decides whether the face is in "night mode". The trigger is the sun,
+    // not the forecast: night means "now is before today's sunrise or after
+    // today's sunset" per Weather.getSunrise/getSunset at the observation
+    // location. A zero-UV forecast must NOT trigger it — a cloudy or deep
+    // winter day has UV 0 with the sun up, and a moon at noon looks broken.
+    // Any missing data (no conditions, no position, null sun times — polar
+    // day/night) means "unknown", and unknown never triggers night; the day
+    // layout is the safe default. The current UV value is deliberately not
+    // consulted: when the sun is down, a nonzero reading is a stale
+    // observation, and hiding it is the point.
     //
-    // Returns null in day mode. In night mode returns the forecastTime of the
-    // first future hour whose UV rounds above 0 (scanning past the 6 checked
-    // hours), or null when the forecast horizon never leaves zero — the
-    // caller drops the "UV from ~HH:MM" line and the bars in that case.
-    private function nightInfo(uvShown as Numeric?, hourly as Array<Weather.HourlyForecast>?) as [Time.Moment?]? {
-        if (uvShown == null || uvShown > 0) {
+    // Returns null in day mode. In night mode returns the forecastTime of
+    // the first future hour whose UV rounds above 0, or null when the
+    // forecast horizon never leaves zero — the caller drops the
+    // "UV from ~HH:MM" line and the bars in that case.
+    private function nightInfo(conditions as Weather.CurrentConditions?, hourly as Array<Weather.HourlyForecast>?) as [Time.Moment?]? {
+        if (conditions == null) {
             return null;
         }
-        if (hourly == null) {
+        var pos = conditions.observationLocationPosition;
+        if (pos == null) {
             return null;
         }
-        var nowVal = Time.now().value();
-        var checked = 0;
-        for (var i = 0; i < hourly.size(); i++) {
-            var ft = hourly[i].forecastTime;
-            if (ft == null || ft.value() < nowVal) {
-                continue;
-            }
-            var uv = hourly[i].uvIndex;
-            if (checked < 6) {
-                if (uv == null || Math.round(uv) > 0) {
-                    return null;    // unknown hour, or UV coming soon → day
+        var now = Time.now();
+        var sunrise = Weather.getSunrise(pos, now);
+        var sunset = Weather.getSunset(pos, now);
+        if (sunrise == null || sunset == null) {
+            return null;
+        }
+        var nowVal = now.value();
+        if (nowVal >= sunrise.value() && nowVal <= sunset.value()) {
+            return null;            // sun is up → day
+        }
+
+        // Night. Ask the forecast when UV becomes relevant again.
+        var firstUv = null;
+        if (hourly != null) {
+            for (var i = 0; i < hourly.size(); i++) {
+                var ft = hourly[i].forecastTime;
+                if (ft == null || ft.value() < nowVal) {
+                    continue;
                 }
-                checked++;
-            } else if (uv != null && Math.round(uv) > 0) {
-                return [ft];        // night; UV returns at ft
+                var uv = hourly[i].uvIndex;
+                if (uv != null && Math.round(uv) > 0) {
+                    firstUv = ft;
+                    break;
+                }
             }
         }
-        if (checked == 0) {
-            return null;            // no usable future entries → can't confirm night
-        }
-        return [null];              // night; horizon never leaves zero
+        return [firstUv];
     }
 
     // "UV from ~7:00" — when the forecast says UV returns. The ~ is honest:
