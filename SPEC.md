@@ -34,7 +34,7 @@ manifest: unchanged
 ## §T tasks
 
 id|status|task|cites
-T1|.|helper: `nightInfo(uvShown, hourly)` → null (day) | {firstUvMoment: Moment?} (night); single pass over ≤6 future entries|V1,V2,V3
+T1|x|helper: `nightInfo(uvShown, hourly)` → null (day) | {firstUvMoment: Moment?} (night); single pass over ≤6 future entries|V1,V2,V3
 T2|.|night hero: crescent (2× fillCircle) + "night" label, skip UV number|V4,V9
 T3|.|"UV from ~HH:MM" line in provenance slot|V5
 T4|.|bars: night → start at first nonzero-UV entry, skip leading zeros; none → skip row|V6,V7
