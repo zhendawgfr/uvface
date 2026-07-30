@@ -25,7 +25,7 @@ FEATURES
 
 PRIVACY & DATA
 
-No accounts, no API keys, no network connections from the watch face itself. UV data comes from Garmin's built-in weather service, delivered through Garmin Connect on your paired phone. The Positioning permission is used only to show the name of the weather observation location.
+No accounts, no API keys, no network connections from the watch face itself. UV data comes from Garmin's built-in weather service, delivered through Garmin Connect on your paired phone. The Positioning permission is used only to show the name of the weather observation location and to determine local sunrise/sunset for night mode.
 
 GOOD TO KNOW
 

@@ -78,14 +78,16 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 1. Optional colored arc gauge around the number instead of / in addition to text.
 2. More languages + broader device support (planned after store listing goes public).
 
-Built already: night mode (v1.2, forecast-driven — NO sunrise/sunset API,
-NO position: night ⟺ rounded current UV == 0 AND next ≤6 future hourly
-entries all non-null and round to 0; any null → day; current UV > 0 always
-day. Night active layout: crescent moon (two fillCircle, no bitmap) instead
-of number, label "night", provenance slot shows "UV from ~H:MM" from first
-nonzero forecast hour (omitted if horizon all-zero), bars skip leading zero
-hours to preview next morning. AOD path untouched. minApiLevel stays 3.2.0.
-See SPEC.md §V for exact invariants); provenance line (location + staleness: "Paris · 23 min ago"
+Built already: night mode (v1.2 — trigger is SUN POSITION, not forecast:
+night ⟺ now outside [getSunrise, getSunset] at observationLocationPosition;
+any null in chain (conditions/position/sun times, incl. polar day/night) →
+day layout. Zero-UV forecast must NOT trigger night — cloudy/winter day
+showed moon at noon, see SPEC.md §B B1. Required minApiLevel bump to 3.3.0
+for getSunrise/getSunset. Night active layout: crescent moon (two
+fillCircle, no bitmap) instead of number, label "night", provenance slot
+shows "UV from ~H:MM" from first nonzero forecast hour (omitted if horizon
+all-zero), bars skip leading zero hours to preview next morning. AOD path
+untouched. See SPEC.md §V for exact invariants); provenance line (location + staleness: "Paris · 23 min ago"
 from observationLocationName, comma-split + capped at 18 chars, falls back
 to "updated N min ago" without name; rolls to h/d), clock
 (HH:MM top-center, honors 12/24h setting, dim + shifted in AOD; owner

@@ -1,7 +1,7 @@
 # UV Index Watch Face
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.2.0-blue.svg)](https://developer.garmin.com/connect-iq/)
+[![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.3.0-blue.svg)](https://developer.garmin.com/connect-iq/)
 [![Connect IQ Store](https://img.shields.io/badge/Connect%20IQ%20Store-Install-brightgreen.svg)](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)
 
 A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmin watches (Venu 4, Vivoactive 5/6, Fenix 8 AMOLED, Fenix E) built around one number: the current UV index at your location — plus the time and a compact hourly UV forecast.
@@ -29,7 +29,7 @@ If you have a USB cable and the Connect IQ SDK, you can build and install it you
 - **Data Provenance Line**: Shows where and when the reading was observed (e.g. `Paris · 23 min ago`, rolling over to hours/days when data is old), falling back to `updated N min ago` when the location name is unavailable.
 - **Clock**: Current time at the top of the face, honoring your 12/24-hour system setting — visible in both active and always-on modes.
 - **Hourly UV Forecast**: Six bars along the bottom show the UV index for the next six hours, each colored on the WHO scale with the hour beneath (active mode only).
-- **Night Mode**: When there is no meaningful UV now and none in the coming hours, the big number gives way to a crescent moon, a "UV from ~7:00" line tells you when UV returns, and the forecast bars skip ahead to preview the next morning. Purely forecast-driven — no GPS or sunrise/sunset lookup.
+- **Night Mode**: After sunset the big number gives way to a crescent moon, a "UV from ~7:00" line tells you when UV returns, and the forecast bars skip ahead to preview the next morning. Sunrise/sunset come from Garmin's weather data for your location — a cloudy or winter day with zero UV still shows the normal day face.
 - **WHO UV Scale Color Coding**: The displayed number is rounded first and then classified, so the digit on screen always matches its color and label:
   - 🟢 **0 – 2 (Low)**: Green
   - 🟡 **3 – 5 (Moderate)**: Yellow
