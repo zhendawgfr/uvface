@@ -48,6 +48,11 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
   `[Views] or [Views, InputDelegates]`. If compiling against an older SDK
   fails here, switch to the legacy `Array<Views or InputDelegates>` signature.
 - `Toybox.Weather` requires **no** manifest permission and needs CIQ >= 3.2.0.
+  BUT `observationLocationName` (provenance line) returns null without the
+  `Positioning` permission — keep it in the manifest while the location is
+  shown. The field is deprecated ("may be removed after System 11") with NO
+  replacement API; accepted the warning, code degrades to "updated N min
+  ago" when it goes null.
 - Forecast granularity is **hourly only** (`Weather.getHourlyForecast()`,
   `HourlyForecast.uvIndex as Float?`). No half-hour data exists — do not
   build UI that implies finer resolution. Entries can include past hours;
@@ -73,7 +78,9 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 1. Optional colored arc gauge around the number instead of / in addition to text.
 2. More languages + broader device support (planned after store listing goes public).
 
-Built already: staleness line ("updated N min ago", rolls to h/d), clock
+Built already: provenance line (location + staleness: "Paris · 23 min ago"
+from observationLocationName, comma-split + capped at 18 chars, falls back
+to "updated N min ago" without name; rolls to h/d), clock
 (HH:MM top-center, honors 12/24h setting, dim + shifted in AOD; owner
 approved 2026-07-29 — face is no longer strictly UV-only), forecast bars
 (6 × 1h along the bottom, WHO-colored, height ∝ UV capped at 11; owner

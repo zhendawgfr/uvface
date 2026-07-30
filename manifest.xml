@@ -9,8 +9,12 @@
             <iq:product id="venu445mm"/>
             <iq:product id="venu441mm"/>
         </iq:products>
-        <!-- Toybox.Weather needs no special permission -->
-        <iq:permissions/>
+        <!-- Toybox.Weather itself needs no permission, but
+             CurrentConditions.observationLocationName returns null
+             without Positioning (used for the provenance line). -->
+        <iq:permissions>
+            <iq:uses-permission id="Positioning"/>
+        </iq:permissions>
         <iq:languages>
             <iq:language>eng</iq:language>
         </iq:languages>

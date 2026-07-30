@@ -30,10 +30,17 @@ class UvFaceView extends WatchUi.WatchFace {
         // --- Get the UV index for the current location ---
         var uv = null;
         var obsTime = null;
+        var obsName = null;
         var conditions = Weather.getCurrentConditions();
         if (conditions != null) {
-            uv = conditions.uvIndex;                 // Float or null
-            obsTime = conditions.observationTime;    // Moment or null
+            uv = conditions.uvIndex;                          // Float or null
+            obsTime = conditions.observationTime;             // Moment or null
+            // Deprecated ("may be removed after System 11") but has no
+            // replacement — Weather exposes no other location name, and
+            // reverse-geocoding coordinates would need network code.
+            // Needs the Positioning permission; degrades to null without it,
+            // which provenanceLabel() already handles.
+            obsName = conditions.observationLocationName;     // String or null
         }
 
         var cx = dc.getWidth() / 2;
@@ -75,7 +82,7 @@ class UvFaceView extends WatchUi.WatchFace {
         dc.drawText(cx, cy + scaled(dc, 70), Graphics.FONT_XTINY, uvLabel(uvShown),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-        var updatedStr = stalenessLabel(obsTime);
+        var updatedStr = provenanceLabel(obsTime, obsName);
         if (updatedStr != null) {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, cy + scaled(dc, 95), Graphics.FONT_XTINY, updatedStr,
@@ -177,10 +184,29 @@ class UvFaceView extends WatchUi.WatchFace {
         return Math.round(px * dc.getHeight() / 454.0).toNumber();
     }
 
-    // Returns an "updated ..." string, or null if observationTime is unavailable.
-    // Rolls over to hours/days so a long phone disconnect does not print
-    // something like "updated 632 min ago".
-    private function stalenessLabel(obsTime as Time.Moment?) as String? {
+    // One data-provenance line: where the observation came from and how old
+    // it is — "Paris · 23 min ago". Falls back to "updated 23 min ago" when
+    // the location name is missing, to the bare name when the time is, and
+    // to null (line not drawn) when both are.
+    private function provenanceLabel(obsTime as Time.Moment?, obsName as String?) as String? {
+        var when = agoString(obsTime);
+        var name = shortLocationName(obsName);
+        if (name != null && when != null) {
+            return name + " · " + when;
+        }
+        if (name != null) {
+            return name;
+        }
+        if (when != null) {
+            return "updated " + when;
+        }
+        return null;
+    }
+
+    // Returns "N min ago" / "Nh ago" / "1d+ ago", or null if observationTime
+    // is unavailable. Rolls over to hours/days so a long phone disconnect
+    // does not print something like "632 min ago".
+    private function agoString(obsTime as Time.Moment?) as String? {
         if (obsTime == null) {
             return null;
         }
@@ -190,13 +216,36 @@ class UvFaceView extends WatchUi.WatchFace {
         }
         var minAgo = (diffSec / 60).toNumber();
         if (minAgo < 90) {
-            return "updated " + minAgo + " min ago";
+            return minAgo + " min ago";
         }
         var hoursAgo = minAgo / 60;
         if (hoursAgo < 24) {
-            return "updated " + hoursAgo + "h ago";
+            return hoursAgo + "h ago";
         }
-        return "updated 1d+ ago";
+        return "1d+ ago";
+    }
+
+    // Location names can be long ("Saint-Germain-en-Laye, Île-de-France");
+    // keep the part before the first comma and hard-cap the length so the
+    // line fits the round screen.
+    private function shortLocationName(name as String?) as String? {
+        if (name == null) {
+            return null;
+        }
+        var comma = name.find(",");
+        if (comma != null) {
+            var cut = name.substring(0, comma);
+            if (cut != null) {
+                name = cut;
+            }
+        }
+        if (name.length() > 18) {
+            var trimmed = name.substring(0, 16);
+            if (trimmed != null) {
+                name = trimmed + "..";
+            }
+        }
+        return name;
     }
 
     // Standard WHO color scale.
