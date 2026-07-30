@@ -93,7 +93,13 @@ mode only, not in AOD).
 - Keep everything in `UvFaceView.mc` unless it grows past ~200 lines.
 - No background services, no `Communications` — stay on `Toybox.Weather` only.
 - Black background always (AMOLED battery + burn-in).
-- Target devices stay venu445mm + venu441mm for now. Owner plans to broaden
-  device support and add more languages after the store listing goes public
-  (currently in beta review as of 2026-07). There is no "Venu 4S" — Garmin's
+- Target devices (2026-07-30): venu445mm, venu441mm, vivoactive5, vivoactive6,
+  fenix843mm, fenix847mm, fenix8pro47mm, fenixe — every round-AMOLED device
+  available in the locally installed SDK device set; all compile clean.
+  MIP devices deliberately excluded (dim-gray AOD unreadable on transflective
+  MIP; layout tuned for 390–454px AMOLED). Venu 2/2S/2Plus, Venu 3/3S,
+  Epix 2/Pro, FR165/265/965, MARQ Gen 2 are likely compatible too but their
+  device definitions are not installed — download via SDK Manager before
+  adding them to the manifest, or export fails. Owner plans more languages
+  after the store listing goes public. There is no "Venu 4S" — Garmin's
   official names for this generation are Venu 4 45mm and Venu 4 41mm.
