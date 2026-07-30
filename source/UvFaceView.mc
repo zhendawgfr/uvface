@@ -92,10 +92,14 @@ class UvFaceView extends WatchUi.WatchFace {
             (night != null) ? "night" : uvLabel(uvShown),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-        var updatedStr = provenanceLabel(obsTime, obsName);
-        if (updatedStr != null) {
+        // Same slot, different job: by day it says where the data came from,
+        // by night it says when UV becomes relevant again (line omitted when
+        // the forecast horizon never leaves zero).
+        var lineStr = (night != null) ? uvReturnLabel(night[0])
+                                      : provenanceLabel(obsTime, obsName);
+        if (lineStr != null) {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + scaled(dc, 95), Graphics.FONT_XTINY, updatedStr,
+            dc.drawText(cx, cy + scaled(dc, 95), Graphics.FONT_XTINY, lineStr,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
@@ -226,6 +230,16 @@ class UvFaceView extends WatchUi.WatchFace {
             return null;            // no usable future entries → can't confirm night
         }
         return [null];              // night; horizon never leaves zero
+    }
+
+    // "UV from ~7:00" — when the forecast says UV returns. The ~ is honest:
+    // hourly forecast granularity, not an exact sunrise time.
+    private function uvReturnLabel(firstUv as Time.Moment?) as String? {
+        if (firstUv == null) {
+            return null;
+        }
+        var info = Gregorian.info(firstUv, Time.FORMAT_SHORT);
+        return "UV from ~" + displayHour(info.hour) + ":" + info.min.format("%02d");
     }
 
     // 24h hour → what the user expects to read, honoring the 12/24h setting.
