@@ -48,6 +48,11 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
   `[Views] or [Views, InputDelegates]`. If compiling against an older SDK
   fails here, switch to the legacy `Array<Views or InputDelegates>` signature.
 - `Toybox.Weather` requires **no** manifest permission and needs CIQ >= 3.2.0.
+- Forecast granularity is **hourly only** (`Weather.getHourlyForecast()`,
+  `HourlyForecast.uvIndex as Float?`). No half-hour data exists — do not
+  build UI that implies finer resolution. Entries can include past hours;
+  filter on `forecastTime >= Time.now()`. `Array.add()` returns the new
+  array — must assign back.
 
 ## Build / test / deploy
 
@@ -70,7 +75,11 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 
 Built already: staleness line ("updated N min ago", rolls to h/d), clock
 (HH:MM top-center, honors 12/24h setting, dim + shifted in AOD; owner
-approved 2026-07-29 — face is no longer strictly UV-only).
+approved 2026-07-29 — face is no longer strictly UV-only), forecast bars
+(6 × 1h along the bottom, WHO-colored, height ∝ UV capped at 11; owner
+asked for 30-min bars 2026-07-30 but API is hourly-only, owner-approved
+hourly compromise; hour digit under each bar via displayHour(); active
+mode only, not in AOD).
 
 ## Conventions
 

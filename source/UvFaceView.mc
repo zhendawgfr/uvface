@@ -3,6 +3,7 @@ import Toybox.Lang;
 import Toybox.Math;
 import Toybox.System;
 import Toybox.Time;
+import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 import Toybox.Weather;
 
@@ -10,6 +11,11 @@ class UvFaceView extends WatchUi.WatchFace {
 
     // True while the AMOLED is in always-on (low power) mode.
     private var _lowPower as Boolean = false;
+
+    // Small font for the forecast-bar hour labels, created lazily.
+    // FONT_XTINY is the smallest fixed font, so going smaller needs a
+    // vector font; falls back to FONT_XTINY where unsupported.
+    private var _barFont as Graphics.FontType? = null;
 
     function initialize() {
         WatchFace.initialize();
@@ -62,31 +68,107 @@ class UvFaceView extends WatchUi.WatchFace {
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scaled(dc, 50), Graphics.FONT_SMALL, "UV INDEX",
+        dc.drawText(cx, cy + scaled(dc, 45), Graphics.FONT_XTINY, "UV INDEX",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + scaled(dc, 80), Graphics.FONT_XTINY, uvLabel(uvShown),
+        dc.drawText(cx, cy + scaled(dc, 70), Graphics.FONT_XTINY, uvLabel(uvShown),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         var updatedStr = stalenessLabel(obsTime);
         if (updatedStr != null) {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + scaled(dc, 108), Graphics.FONT_XTINY, updatedStr,
+            dc.drawText(cx, cy + scaled(dc, 95), Graphics.FONT_XTINY, updatedStr,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
+
+        drawForecastBars(dc, cx, cy + scaled(dc, 168));
+    }
+
+    // Up to 6 one-hour UV forecast bars along the bottom (next ~6 hours),
+    // height proportional to UV (capped at 11), colored by the WHO scale,
+    // with the hour digit under each bar (12/24h per device setting).
+    // The Weather API only provides hourly forecasts, so one bar = one hour;
+    // finer bars would just fake precision the data does not have.
+    // A null-UV hour gets a dark gray baseline stub. Skipped entirely when
+    // no forecast is available. Active mode only — AOD stays minimal.
+    private function drawForecastBars(dc as Dc, cx as Number, baseY as Number) as Void {
+        var hourly = Weather.getHourlyForecast();
+        if (hourly == null) {
+            return;
+        }
+
+        var nowVal = Time.now().value();
+        var uvs = [] as Array<Float?>;
+        var hours = [] as Array<Number>;
+        for (var i = 0; i < hourly.size() && uvs.size() < 6; i++) {
+            var ft = hourly[i].forecastTime;
+            if (ft == null || ft.value() < nowVal) {
+                continue;   // skip stale entries still in the array
+            }
+            uvs = uvs.add(hourly[i].uvIndex) as Array<Float?>;
+            hours = hours.add(Gregorian.info(ft, Time.FORMAT_SHORT).hour) as Array<Number>;
+        }
+        if (uvs.size() == 0) {
+            return;
+        }
+
+        var barFont = _barFont;
+        if (barFont == null) {
+            if (Graphics has :getVectorFont) {
+                barFont = Graphics.getVectorFont(
+                    {:face => "RobotoRegular", :size => scaled(dc, 18)});
+            }
+            if (barFont == null) {
+                barFont = Graphics.FONT_XTINY;
+            }
+            _barFont = barFont;
+        }
+
+        var barW = scaled(dc, 26);
+        var gap  = scaled(dc, 9);
+        var maxH = scaled(dc, 55);
+        var labelY = baseY + scaled(dc, 20);
+        var x = cx - (uvs.size() * barW + (uvs.size() - 1) * gap) / 2;
+        for (var i = 0; i < uvs.size(); i++) {
+            var uv = uvs[i];
+            var h = 2;
+            if (uv == null) {
+                dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            } else {
+                var capped = (uv > 11) ? 11.0 : ((uv < 0) ? 0.0 : uv);
+                h = Math.round(maxH * capped / 11.0).toNumber();
+                if (h < 2) { h = 2; }
+                dc.setColor(uvColor(Math.round(uv)), Graphics.COLOR_TRANSPARENT);
+            }
+            // Rounded corners; radius clamped so short bars stay drawable.
+            var r = scaled(dc, 8);
+            if (r > h / 2) { r = h / 2; }
+            dc.fillRoundedRectangle(x, baseY - h, barW, h, r);
+
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + barW / 2, labelY, barFont,
+                displayHour(hours[i]).toString(),
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+            x += barW + gap;
+        }
+    }
+
+    // 24h hour → what the user expects to read, honoring the 12/24h setting.
+    private function displayHour(h as Number) as Number {
+        if (!System.getDeviceSettings().is24Hour) {
+            h = h % 12;
+            if (h == 0) { h = 12; }
+        }
+        return h;
     }
 
     // Current time as HH:MM, honoring the watch's 12/24-hour setting.
     // Watch faces only update once per minute, so no seconds.
     private function clockString() as String {
         var ct = System.getClockTime();
-        var hour = ct.hour;
-        if (!System.getDeviceSettings().is24Hour) {
-            hour = hour % 12;
-            if (hour == 0) { hour = 12; }
-        }
-        return hour + ":" + ct.min.format("%02d");
+        return displayHour(ct.hour) + ":" + ct.min.format("%02d");
     }
 
     // Vertical offsets were tuned on the 454px Venu 4 45mm screen; scale them
