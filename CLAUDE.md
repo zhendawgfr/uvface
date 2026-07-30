@@ -65,9 +65,12 @@ resources/drawables/launcher_icon.png # placeholder sun icon (60x60)
 
 ## Backlog / ideas discussed with the owner (not yet built)
 
-1. Staleness line under the number: "updated N min ago" from `observationTime`.
-2. Optional colored arc gauge around the number instead of / in addition to text.
-3. Optional small clock in a corner (owner asked for UV-only; confirm before adding).
+1. Optional colored arc gauge around the number instead of / in addition to text.
+2. More languages + broader device support (planned after store listing goes public).
+
+Built already: staleness line ("updated N min ago", rolls to h/d), clock
+(HH:MM top-center, honors 12/24h setting, dim + shifted in AOD; owner
+approved 2026-07-29 — face is no longer strictly UV-only).
 
 ## Conventions
 

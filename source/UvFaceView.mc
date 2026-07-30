@@ -42,14 +42,21 @@ class UvFaceView extends WatchUi.WatchFace {
         if (_lowPower) {
             // Always-on display: keep it dim and small, and nudge the
             // position every minute to satisfy AMOLED burn-in protection.
+            // The clock and the number shift together as one block.
             var shift = ((System.getClockTime().min % 3) - 1) * scaled(dc, 12);
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, cy - scaled(dc, 70) + shift, Graphics.FONT_TINY, clockString(),
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             dc.drawText(cx, cy + shift, Graphics.FONT_NUMBER_MILD, text,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             return;
         }
 
-        // --- Active mode: big number, colored by WHO UV scale ---
+        // --- Active mode: clock on top, big number colored by WHO UV scale ---
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - scaled(dc, 150), Graphics.FONT_MEDIUM, clockString(),
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
         dc.setColor(uvColor(uvShown), Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy - scaled(dc, 30), Graphics.FONT_NUMBER_THAI_HOT, text,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
@@ -68,6 +75,18 @@ class UvFaceView extends WatchUi.WatchFace {
             dc.drawText(cx, cy + scaled(dc, 108), Graphics.FONT_XTINY, updatedStr,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
+    }
+
+    // Current time as HH:MM, honoring the watch's 12/24-hour setting.
+    // Watch faces only update once per minute, so no seconds.
+    private function clockString() as String {
+        var ct = System.getClockTime();
+        var hour = ct.hour;
+        if (!System.getDeviceSettings().is24Hour) {
+            hour = hour % 12;
+            if (hour == 0) { hour = 12; }
+        }
+        return hour + ":" + ct.min.format("%02d");
     }
 
     // Vertical offsets were tuned on the 454px Venu 4 45mm screen; scale them
