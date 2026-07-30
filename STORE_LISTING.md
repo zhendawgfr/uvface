@@ -39,7 +39,13 @@ Venu 4 (45 mm / 41 mm), Vivoactive 5, Vivoactive 6, Fenix 8 (43 mm / 47 mm AMOLE
 
 Source code: https://github.com/zhendawgfr/uvface
 
-## What's New (first public release)
+## What's New
+
+### v1.2
+
+Night mode: when there's no meaningful UV now or in the coming hours, the face shows a crescent moon instead of a zero, tells you when UV returns ("UV from ~7:00"), and the forecast bars skip ahead to the next morning.
+
+### v1.0 (first public release)
 
 Initial public release. Current UV index with WHO color scale, 6-hour forecast bars, clock, observation location and staleness indicator, always-on display support.
 
