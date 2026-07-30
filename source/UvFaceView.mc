@@ -103,7 +103,7 @@ class UvFaceView extends WatchUi.WatchFace {
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
-        drawForecastBars(dc, cx, cy + scaled(dc, 168));
+        drawForecastBars(dc, cx, cy + scaled(dc, 168), hourly, night != null);
     }
 
     // Up to 6 one-hour UV forecast bars along the bottom (next ~6 hours),
@@ -113,13 +113,18 @@ class UvFaceView extends WatchUi.WatchFace {
     // finer bars would just fake precision the data does not have.
     // A null-UV hour gets a dark gray baseline stub. Skipped entirely when
     // no forecast is available. Active mode only — AOD stays minimal.
-    private function drawForecastBars(dc as Dc, cx as Number, baseY as Number) as Void {
-        var hourly = Weather.getHourlyForecast();
+    // In night mode (skipZeroLead) the zero hours between now and the next
+    // UV are dropped, so the bars preview the coming morning instead of
+    // drawing a row of flat stubs; if the horizon never leaves zero the row
+    // is omitted entirely.
+    private function drawForecastBars(dc as Dc, cx as Number, baseY as Number,
+            hourly as Array<Weather.HourlyForecast>?, skipZeroLead as Boolean) as Void {
         if (hourly == null) {
             return;
         }
 
         var nowVal = Time.now().value();
+        var started = !skipZeroLead;
         var uvs = [] as Array<Float?>;
         var hours = [] as Array<Number>;
         for (var i = 0; i < hourly.size() && uvs.size() < 6; i++) {
@@ -127,7 +132,14 @@ class UvFaceView extends WatchUi.WatchFace {
             if (ft == null || ft.value() < nowVal) {
                 continue;   // skip stale entries still in the array
             }
-            uvs = uvs.add(hourly[i].uvIndex) as Array<Float?>;
+            var uv = hourly[i].uvIndex;
+            if (!started) {
+                if (uv == null || Math.round(uv) == 0) {
+                    continue;   // night: drop the zero hours before the next UV
+                }
+                started = true;
+            }
+            uvs = uvs.add(uv) as Array<Float?>;
             hours = hours.add(Gregorian.info(ft, Time.FORMAT_SHORT).hour) as Array<Number>;
         }
         if (uvs.size() == 0) {
