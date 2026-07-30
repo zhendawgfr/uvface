@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.2.0-blue.svg)](https://developer.garmin.com/connect-iq/)
 
-A minimal, battery-efficient Garmin Connect IQ watch face for the **Garmin Venu 4** (45 mm & 41 mm) that displays the current UV index for your location — nothing else.
+A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmin watches (Venu 4, Vivoactive 5/6, Fenix 8 AMOLED, Fenix E) built around one number: the current UV index at your location — plus the time and a compact hourly UV forecast.
 
 ![Real Device Screenshot](resources/screenshot3.png)
 
@@ -28,7 +28,9 @@ If you have a USB cable and the Connect IQ SDK, you can build and install it you
 ## Features
 
 - **Zero-Configuration Weather Data**: Automatically retrieves local UV index values via Garmin's built-in `Toybox.Weather` API fed from your paired smartphone. No API keys, no companion app, no network code.
-- **Data Staleness Indicator**: Shows `"updated N min ago"` (rolling over to hours/days when data is old) so you know exactly how fresh the reading is.
+- **Data Provenance Line**: Shows where and when the reading was observed (e.g. `Paris · 23 min ago`, rolling over to hours/days when data is old), falling back to `updated N min ago` when the location name is unavailable.
+- **Clock**: Current time at the top of the face, honoring your 12/24-hour system setting — visible in both active and always-on modes.
+- **Hourly UV Forecast**: Six bars along the bottom show the UV index for the next six hours, each colored on the WHO scale with the hour beneath (active mode only).
 - **WHO UV Scale Color Coding**: The displayed number is rounded first and then classified, so the digit on screen always matches its color and label:
   - 🟢 **0 – 2 (Low)**: Green
   - 🟡 **3 – 5 (Moderate)**: Yellow
@@ -47,14 +49,20 @@ If you have a USB cable and the Connect IQ SDK, you can build and install it you
 | :--- | :--- | :--- |
 | Garmin Venu 4 (45 mm) | `venu445mm` | 454 × 454 |
 | Garmin Venu 4 (41 mm) | `venu441mm` | 390 × 390 |
+| Garmin Vivoactive 5 | `vivoactive5` | 390 × 390 |
+| Garmin Vivoactive 6 | `vivoactive6` | 390 × 390 |
+| Garmin Fenix 8 (43 mm) | `fenix843mm` | 416 × 416 |
+| Garmin Fenix 8 (47 mm, AMOLED) | `fenix847mm` | 454 × 454 |
+| Garmin Fenix 8 Pro (47 mm) | `fenix8pro47mm` | 454 × 454 |
+| Garmin Fenix E | `fenixe` | 416 × 416 |
 
-The layout is tuned on the 45 mm screen and scaled proportionally on the 41 mm.
+The layout is tuned on the 454 px screen and scaled proportionally on smaller resolutions. Only round AMOLED devices are targeted — the always-on mode relies on a dim, mostly-black design that doesn't suit transflective MIP displays.
 
 ## Roadmap
 
 - [ ] Public Connect IQ Store listing (currently in beta review)
 - [ ] Additional languages (currently English only)
-- [ ] Broader device support beyond the Venu 4 family
+- [x] Broader device support beyond the Venu 4 family (round AMOLED devices; more planned, e.g. Venu 2/3, Epix 2, Forerunner 165/265/965)
 - [ ] Optional colored arc gauge around the UV number
 
 Suggestions and contributions welcome — open an issue or PR.
@@ -83,7 +91,7 @@ If you want to modify or contribute to this watch face, you can build and run it
    - Test weather states via **Simulation → Weather** (including the no-data `null` case).
    - Test AMOLED burn-in protection shift & dimming via **Simulation → Toggle Low Power Mode**.
 4. To build for a physical device:
-   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → Select `venu445mm` (Venu 4 45mm) or `venu441mm` (Venu 4 41mm).
+   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) → **Monkey C: Build for Device** → select your device (e.g. `venu445mm`; see the table above for all SDK IDs).
 
 ### Manual Sideloading (USB)
 
@@ -95,7 +103,7 @@ If you want to modify or contribute to this watch face, you can build and run it
 ## Project Structure
 
 ```
-├── manifest.xml                          # Connect IQ manifest (Target: venu445mm + venu441mm, Min API 3.2.0)
+├── manifest.xml                          # Connect IQ manifest (8 round-AMOLED targets, Min API 3.2.0)
 ├── monkey.jungle                         # Project jungle configuration
 ├── source/
 │   ├── UvFaceApp.mc                      # Application entry point
@@ -109,7 +117,7 @@ If you want to modify or contribute to this watch face, you can build and run it
 
 ## Contributing
 
-Issues and pull requests are welcome. Keep in mind the design philosophy: **UV index only**, black background, no network code, no configuration screens. Feature ideas that fit that scope (see the roadmap) are the most likely to be merged.
+Issues and pull requests are welcome. Keep in mind the design philosophy: **UV first**, black background, no network code, no configuration screens. Feature ideas that fit that scope (see the roadmap) are the most likely to be merged.
 
 ## License
 
