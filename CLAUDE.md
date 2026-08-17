@@ -15,7 +15,7 @@ Expect possible minor compile fixes depending on installed SDK version.
 ## Project structure
 
 ```
-manifest.xml                          # app id, type=watchface, products: venu445mm + venu441mm, minApiLevel 3.2.0
+manifest.xml                          # app id, type=watchface, 18 round-AMOLED targets, minApiLevel 3.3.0
 monkey.jungle                         # standard jungle file, nothing custom
 source/UvFaceApp.mc                   # Application.AppBase entry, returns UvFaceView
 source/UvFaceView.mc                  # ALL logic lives here
@@ -102,15 +102,14 @@ mode only, not in AOD).
 - Keep everything in `UvFaceView.mc` unless it grows past ~200 lines.
 - No background services, no `Communications` — stay on `Toybox.Weather` only.
 - Black background always (AMOLED battery + burn-in).
-- Target devices (2026-07-30): venu445mm, venu441mm, vivoactive5, vivoactive6,
-  fenix843mm, fenix847mm, fenix8pro47mm, fenixe — every round-AMOLED device
-  available in the locally installed SDK device set; all compile clean.
+- Target devices: venu445mm, venu441mm, venu3, venu3s, fr165, fr165m, fr265, fr265s,
+  fr57047mm, fr57042mm, fr965, fr970, vivoactive5, vivoactive6, fenix843mm, fenix847mm,
+  fenix8pro47mm, fenixe — every round-AMOLED device in the target set.
   MIP devices deliberately excluded (dim-gray AOD unreadable on transflective
-  MIP; layout tuned for 390–454px AMOLED). Venu 2/2S/2Plus, Venu 3/3S,
-  Epix 2/Pro, FR165/265/965, MARQ Gen 2 are likely compatible too but their
-  device definitions are not installed — download via SDK Manager before
-  adding them to the manifest, or export fails. Owner plans more languages
-  next. Store listing PUBLIC since 2026-07-30:
+  MIP; layout tuned for 360–454px AMOLED).
+  Note: Device definitions must be downloaded in Garmin SDK Manager to build/export
+  for those devices.
+  Store listing PUBLIC since 2026-07-30:
   https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1
   (public appID afa93e1472dd40ad9be3541373f93d1c; old beta appID retired).
   There is no "Venu 4S" — Garmin's official names for this generation are

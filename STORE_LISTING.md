@@ -35,7 +35,7 @@ GOOD TO KNOW
 
 SUPPORTED DEVICES
 
-Venu 4 (45 mm / 41 mm), Vivoactive 5, Vivoactive 6, Fenix 8 (43 mm / 47 mm AMOLED), Fenix 8 Pro (47 mm), Fenix E. More devices planned.
+Venu 4 (45 mm / 41 mm), Venu 3 / 3S, Forerunner 165 / 165 Music, Forerunner 265 / 265S, Forerunner 570 (47 mm / 42 mm), Forerunner 965, Forerunner 970, Vivoactive 5, Vivoactive 6, Fenix 8 (43 mm / 47 mm AMOLED), Fenix 8 Pro (47 mm), Fenix E.
 
 Source code: https://github.com/zhendawgfr/uvface
 
