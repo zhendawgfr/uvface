@@ -91,7 +91,9 @@ untouched. See SPEC.md §V for exact invariants); provenance line (location + st
 from observationLocationName, comma-split + capped at 18 chars, falls back
 to "updated N min ago" without name; rolls to h/d), clock
 (HH:MM top-center, honors 12/24h setting, dim + shifted in AOD; owner
-approved 2026-07-29 — face is no longer strictly UV-only), forecast bars
+approved 2026-07-29 — face is no longer strictly UV-only; enlarged
+2026-09-29 after a store review: active FONT_NUMBER_MILD at cy-160, AOD
+FONT_SMALL at cy-75 — not yet checked in simulator), forecast bars
 (6 × 1h along the bottom, WHO-colored, height ∝ UV capped at 11; owner
 asked for 30-min bars 2026-07-30 but API is hourly-only, owner-approved
 hourly compromise; hour digit under each bar via displayHour(); active

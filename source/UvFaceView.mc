@@ -58,7 +58,7 @@ class UvFaceView extends WatchUi.WatchFace {
             // The clock and the number shift together as one block.
             var shift = ((System.getClockTime().min % 3) - 1) * scaled(dc, 12);
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy - scaled(dc, 70) + shift, Graphics.FONT_TINY, clockString(),
+            dc.drawText(cx, cy - scaled(dc, 75) + shift, Graphics.FONT_SMALL, clockString(),
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             dc.drawText(cx, cy + shift, Graphics.FONT_NUMBER_MILD, text,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
@@ -72,7 +72,9 @@ class UvFaceView extends WatchUi.WatchFace {
         var night = nightInfo(conditions, hourly);
 
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - scaled(dc, 150), Graphics.FONT_MEDIUM, clockString(),
+        // Number font (not a text font) so the time reads at a glance —
+        // raised from FONT_MEDIUM after a store review asked for a bigger clock.
+        dc.drawText(cx, cy - scaled(dc, 160), Graphics.FONT_NUMBER_MILD, clockString(),
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         if (night != null) {
