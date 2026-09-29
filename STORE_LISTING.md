@@ -41,6 +41,10 @@ Source code: https://github.com/zhendawgfr/uvface
 
 ## What's New
 
+### v1.3
+
+Fixed night mode showing a moon during the day in the Americas and other locations west of UTC. Night is now decided by sunrise and sunset at your location, so cloudy or winter days keep the UV number. Larger clock. Added Venu 3 / 3S, Forerunner 165 / 265 / 570 / 965 / 970, Vivoactive 5 / 6 and Fenix 8 support.
+
 ### v1.2
 
 Night mode: when there's no meaningful UV now or in the coming hours, the face shows a crescent moon instead of a zero, tells you when UV returns ("UV from ~7:00"), and the forecast bars skip ahead to the next morning.
