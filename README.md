@@ -4,7 +4,7 @@
 [![Connect IQ](https://img.shields.io/badge/Connect%20IQ-%E2%89%A5%203.3.0-blue.svg)](https://developer.garmin.com/connect-iq/)
 [![Connect IQ Store](https://img.shields.io/badge/Connect%20IQ%20Store-Install-brightgreen.svg)](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)
 
-A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmin watches (Venu 4, Vivoactive 5/6, Fenix 8 AMOLED, Fenix E) built around one number: the current UV index at your location — plus the time and a compact hourly UV forecast.
+A minimal, battery-efficient Garmin Connect IQ watch face for round-AMOLED Garmin watches (Venu 3/4, Forerunner 165/265/570/965/970, Vivoactive 5/6, Fenix 8 AMOLED, Fenix E) built around one number: the current UV index at your location — plus the time and a compact hourly UV forecast.
 
 ![Real Device Screenshot](resources/screenshot3.png)
 
@@ -48,6 +48,16 @@ If you have a USB cable and the Connect IQ SDK, you can build and install it you
 | :--- | :--- | :--- |
 | Garmin Venu 4 (45 mm) | `venu445mm` | 454 × 454 |
 | Garmin Venu 4 (41 mm) | `venu441mm` | 390 × 390 |
+| Garmin Venu 3 | `venu3` | 454 × 454 |
+| Garmin Venu 3S | `venu3s` | 390 × 390 |
+| Garmin Forerunner 165 | `fr165` | 390 × 390 |
+| Garmin Forerunner 165 Music | `fr165m` | 390 × 390 |
+| Garmin Forerunner 265 | `fr265` | 416 × 416 |
+| Garmin Forerunner 265S | `fr265s` | 360 × 360 |
+| Garmin Forerunner 570 (47 mm) | `fr57047mm` | 454 × 454 |
+| Garmin Forerunner 570 (42 mm) | `fr57042mm` | 390 × 390 |
+| Garmin Forerunner 965 | `fr965` | 454 × 454 |
+| Garmin Forerunner 970 | `fr970` | 454 × 454 |
 | Garmin Vivoactive 5 | `vivoactive5` | 390 × 390 |
 | Garmin Vivoactive 6 | `vivoactive6` | 390 × 390 |
 | Garmin Fenix 8 (43 mm) | `fenix843mm` | 416 × 416 |
@@ -61,7 +71,7 @@ The layout is tuned on the 454 px screen and scaled proportionally on smaller re
 
 - [x] Public Connect IQ Store listing — [live here](https://apps.garmin.com/en-US/apps/9f722221-dc91-4023-8e5c-2bcc6ee778b1)
 - [ ] Additional languages (currently English only)
-- [x] Broader device support beyond the Venu 4 family (round AMOLED devices; more planned, e.g. Venu 2/3, Epix 2, Forerunner 165/265/965)
+- [x] Broader device support beyond the Venu 4 family (round AMOLED devices: Venu 3/3S, Forerunner 165/265/570/965/970, Vivoactive 5/6, Fenix 8/E)
 - [ ] Optional colored arc gauge around the UV number
 
 Suggestions and contributions welcome — open an issue or PR.
@@ -102,7 +112,7 @@ If you want to modify or contribute to this watch face, you can build and run it
 ## Project Structure
 
 ```
-├── manifest.xml                          # Connect IQ manifest (8 round-AMOLED targets, Min API 3.2.0)
+├── manifest.xml                          # Connect IQ manifest (18 round-AMOLED targets, Min API 3.3.0)
 ├── monkey.jungle                         # Project jungle configuration
 ├── source/
 │   ├── UvFaceApp.mc                      # Application entry point
