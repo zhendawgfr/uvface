@@ -233,7 +233,15 @@ class UvFaceView extends WatchUi.WatchFace {
             return null;
         }
         var nowVal = now.value();
-        if (nowVal >= sunrise.value() && nowVal <= sunset.value()) {
+        // getSunrise/getSunset pair times by UTC date, so west of UTC the
+        // sunset can land before the sunrise (LA: sunset = yesterday's
+        // evening). Then the day spans the wrap: up iff after sunrise OR
+        // before sunset.
+        var rise = sunrise.value();
+        var set = sunset.value();
+        var sunUp = (rise <= set) ? (nowVal >= rise && nowVal <= set)
+                                  : (nowVal >= rise || nowVal <= set);
+        if (sunUp) {
             return null;            // sun is up → day
         }
 
